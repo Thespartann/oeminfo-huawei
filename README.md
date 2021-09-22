@@ -1,12 +1,12 @@
 ###  oeminfo-huawei
   
-- Allows modification of the oeminfo file on Huawai devices which can change things like the model number and region
+- Used to modify the oeminfo file/storage region on Huawai devices which controls things like the model number and region
 - 2021 fork of https://github.com/penn5/oeminfo-huawei fixing bugs in the pack function and adding a usage examples.
 - Original code from https://forum.xda-developers.com/p9-plus/how-to/mod-oeminfo-structure-t3446382
 
 
 ```shell
- oeminfo_huawei.py [-h] {extract,pack,replace} ...
+oeminfo_huawei.py [-h] {extract,pack,replace} ...
 
 positional arguments:
   {extract,pack,replace}
