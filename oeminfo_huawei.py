@@ -173,11 +173,12 @@ def unpackOEM(f, outdir=None):
         unpackOEM(f, outdir)
     return outdir
 
-def encodeOEM(out_filename):
+def encodeOEM(in_folder, out_filename):
     out = bytearray(b'\x00'*0x4000000)
     counter=0
     content_startbytes = []
-    for root, subFolder, files in os.walk("."):
+#    for root, subFolder, files in os.walk("."):
+    for root, subFolder, files in os.walk(in_folder):
         for item in files:
             if item.endswith(".bin"):
                 id, type, age, content_startbyte = item.split(".")[0].split("-")
@@ -205,9 +206,12 @@ def encodeOEM(out_filename):
     out[0x2074000:0x2075000] = b'\xff'*0x1000
     out[0x28a4a50:0x2cb0000] = b'\xff'*0x40b5b0
 #    out[0x2067000:0x2068000] = b'\xff'*0x1000
-    with open(out_filename, "wb") as f:
-        f.write(out)
-    return ""
+
+#    with open(out_filename, "wb") as f:
+#        f.write(out)
+#    return ""
+    out_filename.write(out)
+
 
 def replaceOEM(f, elements, out):
     binary = bytearray(f.read())
