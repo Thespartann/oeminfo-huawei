@@ -19,7 +19,7 @@ optional arguments:
 #### Detailed Usage example:
 
  - You must have an unlocked bootloader and Magisk installed to modify the oeminfo 
- - Script tested Ubuntu with python3 on a CMR-W09 with EMUI 9.1.332 to change the region from C567 to C432 and hw/usa to hw/eu
+ - Script sucessfully tested on Ubuntu with python3 on a CMR-W09 running EMUI 9.1.0.332 to change the region from C567 to C432 and hw/usa to hw/eu
  
 ```shell
 user@ubuntu:~/oem_info$ adb shell
