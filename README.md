@@ -38,7 +38,7 @@ hdr:OEM_INFO age:  5 id:   43 Root Type (info)
 CMR-W09#hw-usa#CMR-W09 8.0.0.200(C567)
 ```
 
-- Modify files within the CMR-W09#hw-usa#CMR-W09 8.0.0.200(C567) directory to change the region using a hex editor
+- Edit files within the CMR-W09#hw-usa#CMR-W09 8.0.0.200(C567) directory to change the region using a hex editor like GHex
 
 ```shell
 user@ubuntu:~/oem_info$ python3 oeminfo_huawei.py pack -i CMR-W09#hw-usa#CMR-W09\ 8.0.0.200\(C567\)/ -o ./test2.img
