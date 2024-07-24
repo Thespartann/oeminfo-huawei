@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.7
+#!/usr/bin/env python3.9
 # OEMINFO tool
 # rysmario 2016
 # Thespartann 2024
@@ -34,11 +34,10 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import sys
-import os
 import argparse
-import zipfile
 import tempfile
 from struct import *
+from pathlib import Path
 
 elements = {
     6: {
@@ -97,11 +96,11 @@ def element(version, key):
 
 def sanitize_filename(filename):
     # Remove characters not allowed in Windows filenames
-    return "".join(c for c in filename if c not in "\\/:*?\"<>|")
+    invalid_chars = '<>:"/\\|?*'
+    return ''.join(c for c in filename if c not in invalid_chars)
 
 def ensure_directory_exists(directory):
-    if not os.path.exists(directory):
-        os.makedirs(directory)
+    Path(directory).mkdir(parents=True, exist_ok=True)
 
 def unpackOEM(f, outdir=None):
     if outdir is None:
@@ -121,7 +120,7 @@ def unpackOEM(f, outdir=None):
         (header, version_number, id, type, data_len, age) = unpack("8sIIIII", binary[content_startbyte:content_startbyte+0x1c])
         
         if header == b"OEM_INFO":
-            if version_number == 6 or version_number == 8:
+            if version_number in {6, 8}:
                 if id == 0x61:
                     HW_Version = binary[content_startbyte+0x200:content_startbyte+0x200+data_len]
                 if id == 0x12:
@@ -132,7 +131,7 @@ def unpackOEM(f, outdir=None):
                 if outdir is not None:
                     ensure_directory_exists(outdir)
                     
-                    fileout = "{:x}-{:x}-{:x}-{:x}".format(id, type, age, content_startbyte)
+                    fileout = f"{id:x}-{type:x}-{age:x}-{content_startbyte:x}"
                     
                     try:
                         header_decoded = header.decode('utf-8', errors='replace')
@@ -141,20 +140,20 @@ def unpackOEM(f, outdir=None):
                         header_decoded = "unknown_header"
                         print(f"hdr:{header_decoded:<8} age:{age:3x} id:{id:5x} {element(version_number, id)} ")
                         
-                    with open(os.path.join(outdir, fileout + ".bin"), "wb") as out_file:
+                    with open(Path(outdir) / f"{fileout}.bin", "wb") as out_file:
                         out_file.write(binary[content_startbyte+0x200:content_startbyte+0x200+data_len])
                     
                     if element(version_number, id):
                         sanitized_filename = sanitize_filename(element(version_number, id))
-                        symlink_link = os.path.join(outdir, f"{sanitized_filename}.{hex(content_startbyte)}.txt")
+                        symlink_link = Path(outdir) / f"{sanitized_filename}.{content_startbyte:x}.txt"
                         with open(symlink_link, "w") as link_file:
-                            link_file.write(os.path.join(outdir, fileout + ".bin"))
+                            link_file.write(str(Path(outdir) / f"{fileout}.bin"))
                     
-                    if (version_number == 6 and type == 0x1fa5) or (version_number == 8 and (type == 0x2399 or type == 0x1fa5)):
+                    if (version_number == 6 and type == 0x1fa5) or (version_number == 8 and type in {0x2399, 0x1fa5}):
                         if element(version_number, id):
-                            bmp_link = os.path.join(outdir, f"{sanitized_filename}.{hex(content_startbyte)}.bmp")
+                            bmp_link = Path(outdir) / f"{sanitized_filename}.{content_startbyte:x}.bmp"
                             with open(bmp_link, "w") as bmp_file:
-                                bmp_file.write(os.path.join(outdir, fileout + ".bin"))
+                                bmp_file.write(str(Path(outdir) / f"{fileout}.bin"))
         
         content_startbyte += 0x400
     
@@ -180,7 +179,7 @@ def encodeOEM(in_folder, out_filename):
             if item.endswith(".bin"):
                 id, type, age, content_startbyte = item.split(".")[0].split("-")
                 buf_start = int(content_startbyte, 16)
-                with open(os.path.join(root, item), "rb") as infile:
+                with open(Path(root) / item, "rb") as infile:
                     data = infile.read()
                     content_length = len(data)
                     if int(id, 16) in (0x69, 0x57, 0x44):
@@ -201,7 +200,7 @@ def replaceOEM(in_folder, out_filename):
                 if item.endswith(".bin"):
                     id, type, age, content_startbyte = item.split(".")[0].split("-")
                     buf_start = int(content_startbyte, 16)
-                    with open(os.path.join(root, item), "rb") as infile:
+                    with open(Path(root) / item, "rb") as infile:
                         data = infile.read()
                         content_length = len(data)
                         if int(id, 16) in (0x69, 0x57, 0x44):
