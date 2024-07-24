@@ -1,24 +1,15 @@
 #!/usr/bin/env python3.9
-# OEMINFO tool
+# Oeminfo Huawei Tool
 # rysmario 2016
 # Thespartann 2024
-#   hackish tool to "unpack" a oeminfo from huawei
+#   Hackish tool to "unpack" a oeminfo from huawei
 #
 # I take NO responsibility for a brick, soft brick, alien abduction or anything
 
-# takes arguments "decode", "encode", "replace"
-#   decode is optional
-#decode oeminfo.bin to folder created from oemeinfo content [i.e. VIE-AL10#all-cn#VIE-C00B176- Rayglobe ]
-#   python oeminfo_decode_v2.py [decode] <oeminfo.bin>
-#
-#replace folder to out_file:
-#   python oeminfo_decode_v2.py replae <existing_out_file> <replacement-file>
-
-# Originally from https://forum.xda-developers.com/p9-plus/how-to/mod-oeminfo-structure-t3446382
-# Came with no license, but in the OP is noted that you can do what you want, so I will relicense under GPLv3
-
-# oeminfo unpacker for huawei
+# Oeminfo unpacker for huawei
 #   Some code from this file is copyright (C) 2019 Hackintosh5
+#   Some code from this file is copyright (C) 2021 EtoTen
+#   Some code from this file is copyright (C) 2024 Thespartann
 #   Thanks to rysmario 2016, no copyright asserted by them.
 #
 #   This program is free software: you can redistribute it and/or modify
@@ -43,16 +34,16 @@ elements = {
     6: {
         0x12: "Region",
         0x43: "Root Type (info)",
-        0x44: "rescue Version",
+        0x44: "Rescue Version",
         0x4a: "16 byte string 0 terminated",
         0x4e: "Rom Version",
         0x58: "Alternate ROM Version?",
         0x5e: "OEMINFO_VENDER_AND_COUNTRY_NAME_COTA",
-        0x5b: "Hardware Version Customizeable",
+        0x5b: "Hardware Version Customizable",
         0x5c: "USB Switch?",
         0x61: "Hardware Version",
         0x62: "PRF?",
-        0x65: "Rom Version Customizeable",
+        0x65: "Rom Version Customizable",
         0x67: "CN or CDMA info 0x67",
         0x68: "CN or CDMA info 0x68",
         0x6a: "CN or CDMA info 0x6a",
@@ -74,16 +65,16 @@ elements = {
     8: {
         0x5c: "Userlock",
         0x5d: "System Lock State",
-        0x28: "Version number",
+        0x28: "Version Number",
         0x33: "Software Version as CSV",
-        0x35: "semicolon separated text containing device identifiers, possibly used in bootloader code generation",
-        0x3f: "update token",
-        0x50: "cust version",
-        0x52: "preload version",
-        0x56: "system version",
-        0x5ec: "build number",
-        0x5ee: "model number",
-        0xc: "system security data",
+        0x35: "Semicolon separated text containing device identifiers, possibly used in bootloader code generation",
+        0x3f: "Update Token",
+        0x50: "Cust Version",
+        0x52: "Preload Version",
+        0x56: "System Version",
+        0x5ec: "Build Number",
+        0x5ee: "Model Number",
+        0xc: "System Security Data",
         0x1197: "Logo Battery Charge",
         0x1196: "Logo Battery Empty",
         0x1196: "Logo additional (custom format)",
